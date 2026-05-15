@@ -14,16 +14,14 @@ int main(){
     char letter = 'A';
     double pi_upto_10_decimal_places = 3.1415926535;
     bool is_true = true;
-     sum(); // Calling the function to demonstrate global variable access
-     /*according to my understanding, before defining local variable you need to demonstrate
-     global variable access else, it will take local variable defined in this function*/
-    GlobalVariable = 20; // Modifying the global variable
+    // sum(); // Calling the function to demonstrate global variable access
+    int GlobalVariable = 20; // Declaring a local variable with the same name as the global variable
     cout<< "\nOne: "<< one;
     cout<< "\nTwo: "<< two;
     cout<< "\nPi: "<< pi;
     cout<< "\nFirst alphabet: "<< letter;
     cout<< "\nPi up to 10 decimal places: "<< pi_upto_10_decimal_places << " Is it true? "<< is_true;
-    // sum(); // Calling the function to demonstrate global variable access
+    sum(); // Calling the function to demonstrate global variable access
     cout<< "\nNow using local variable with same name as global variable: "<< GlobalVariable;
     return 0;
 }
