@@ -2,7 +2,7 @@
 #include <iomanip>
 using namespace std;    
 int main() {
-    int number, prime;
+    int number, prime = 4;
     cout << "Enter a number: ";
     cin >> number;
     for (int i = 2; i <= number-1 ; i++){
