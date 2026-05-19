@@ -5,9 +5,11 @@ int main() {
     int Marks[5], total, percentage;
     cout << "Enter the marks of 5 subjects: ";
     cin >> Marks[0] >> Marks[1] >> Marks[2] >> Marks[3] >> Marks[4];
-    if (Marks[0] > 100 || Marks[0] < 0 || Marks[1] > 100 || Marks[1] < 0 || Marks[2] > 100 || Marks[2] < 0 || Marks[3] > 100 || Marks[3] < 0 || Marks[4] > 100 || Marks[4] < 0) {
-        cout << "Invalid input! Please enter marks between 0 and 100." << endl;
-        return 0; // Exit the program with an error code
+    for (int i = 0; i < 5; i++){
+        if (Marks[i] > 100 || Marks[i] < 0) {
+            cout << "Invalid input! Please enter marks between 0 and 100." << endl;
+            return 0; // Exit the program with an error code
+        }
     }
     total = Marks[0] + Marks[1] + Marks[2] + Marks[3] + Marks[4];
     percentage = total / 5;
