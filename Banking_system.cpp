@@ -61,26 +61,40 @@ int main(){
 }
 }
 int create_account(){
-    string confirm_password;
+    string name, password, confirm_password;
     if (no_of_users == 10) { 
         cout << endl << "Maximum Accounts Created"; return 0;
     }
-    cout << endl<< "Enter your name: ";
-    cin >> user[no_of_users].name;
-    cout << endl <<"Create a password: ";
-    cin >> user[no_of_users].password;
-    while (user[no_of_users].password == user[no_of_users].name){
-        cout << endl << "Password cannot be the same as your name. Try Again: ";
-        cin >> user[no_of_users].password;
+    cout << endl<< "Enter your name(-1 to cancel) ";
+    cin >> name;
+    if (name == "-1"){ 
+        return 0;
+    }
+    cout << endl <<"Create a password(-1 to cancel): ";
+    cin >> password;
+    if (password == "-1"){
+        return 0;
+    }
+    while (name == password){
+        cout << endl << "Password cannot be the same as your name. Try Again(-1 to cancel): ";
+        cin >> password;
+        if (password == "-1"){
+            return 0;
+        }
     }
     cout << endl << "Confirm password: ";
     cin >> confirm_password;
-    while (confirm_password != user[no_of_users].password){
-        cout << endl << "Passwords do not match! Try Again: ";
-        cin >> user[no_of_users].password;
+    while (confirm_password != password){
+        cout << endl << "Passwords do not match! Try Again(-1 to cancel): ";
+        cin >> password;
+        if (password == "-1"){
+            return 0;
+        }
         cout << endl << "Confirm password: ";
         cin >> confirm_password;
     }
+    user[no_of_users].name = name;
+    user[no_of_users].password = password;
     user[no_of_users].account_number = no_of_users+1;
     user[no_of_users].balance = 0;
     no_of_users++;
@@ -90,8 +104,11 @@ int create_account(){
 int login(){
     int account_number, option;
     string password;
-    cout << endl << "Enter your account number: ";
+    cout << endl << "Enter your account number(-1 to cancel): ";
     cin >> account_number;
+    if(account_number == -1) {
+        return 0;
+    }
     for (int i = 0; i < no_of_users; i++) {
         if (user[i].account_number == account_number) {
             cout << endl << "Account Holder: " << user[i].name;
@@ -132,8 +149,11 @@ int login(){
 int deposit(int a){
     int amount;
     cout << endl << "Account no. " << user[a].account_number;
-    cout << endl << "Enter amount to be deposited: $";
+    cout << endl << "Enter amount to be deposited(-1 to cancel): $";
     cin >> amount;
+    if (amount == -1) {
+        return 0;
+    }
     user[a].balance = user[a].balance + amount;
     cout << endl << "$" << amount << " deposited to your bank account."; 
     return 0;
@@ -142,8 +162,11 @@ int withdraw(int b){
     int amount;
     string password;
     cout << endl << "Account no. " << user[b].account_number;
-    cout << endl << "Enter amount to be withdrawn: $";
+    cout << endl << "Enter amount to be withdrawn(-1 to cancel): $";
     cin >> amount;
+    if (amount == -1){
+        return 0;
+    }
     for (int i =3; i >0; i--) {
     cout << endl << "Enter Password: ";
     cin >> password;
@@ -160,8 +183,11 @@ int transfer(int c){
     int amount, reciever_account_number;
     string password;
     cout << endl << "Your Account No. " << user[c].account_number;
-    cout << endl << "Reciever's Account No. ";
+    cout << endl << "Reciever's Account No(-1 to cancel). ";
     cin >> reciever_account_number;
+    if (reciever_account_number == -1){
+        return 0;
+    }
     for (int i = 0; i < no_of_users; i++){
         if (reciever_account_number == user[c].account_number) {
             cout << endl << "Can not transfer money to your own account"; return 0;
@@ -189,8 +215,11 @@ int transfer(int c){
     }
 int change_password(int d){
     string current_password, new_password, confirm_password;
-    cout << endl << "Enter Current Password: ";
+    cout << endl << "Enter Current Password(-1 to cancel): ";
     cin >> current_password;
+    if(current_password == "-1"){
+        return 0;
+    }
     if (current_password == user[d].password) {
         cout << endl << "Create New Password: ";
         cin >> new_password;
@@ -201,6 +230,9 @@ int change_password(int d){
         cout << endl << "Confirm Password: ";
         cin >> confirm_password;
         }
+    else if (current_password != user[d].password){
+        cout << endl << "Incorrect Password"; return 0;
+    }
         while (new_password != confirm_password) {
             cout << endl << "Password did not match confirm password. Create Password";
             cin >> new_password;
@@ -214,13 +246,23 @@ int change_password(int d){
         cout << endl << "Password Sucessfully Changed!!"; return 0;
     }
 int take_loan(){
+    string name;
+    int amount;
     if (no_of_loans == 10) {
         cout << endl << "Maximum Loans Granted"; return 0;
     }
-    cout << endl << "Enter your name: ";
-    cin >> loan_num[no_of_loans].name;
-    cout << endl << "Enter Amount: ";
-    cin >> loan_num[no_of_loans].amount;
+    cout << endl << "Enter your name(-1 to cancel): ";
+    cin >> name;
+    if (name == "-1") {
+        return 0;
+    }
+    cout << endl << "Enter Amount(-1 to cancel): ";
+    cin >> amount;
+    if (amount == -1){
+        return 0;
+    }
+    loan_num[no_of_loans].name = name;
+    loan_num[no_of_loans].amount = amount;
     loan_num[no_of_loans].id = no_of_loans+1;
     loan_num[no_of_loans].active = true;
     loan_num[no_of_loans].amount_to_be_paid_back = loan_num[no_of_loans].amount + (loan_num[no_of_loans].amount/10.00);
@@ -231,16 +273,25 @@ int take_loan(){
 int repay_loan(){
     int loan_id;
     float pay_back;
-    cout << endl << "Enter loan id: ";
+    cout << endl << "Enter loan id(-1 to cancel): ";
     cin >> loan_id;
+    if (loan_id == -1) {
+        return 0;
+    }
     for (int i = 0; i < no_of_loans; i++){
         if (loan_num[i].id == loan_id) {
             cout << "\nLoan Holder: " << loan_num[i].name << endl << "Amount to be paid back: " << loan_num[i].amount_to_be_paid_back;
-            cout << endl << "Pay: $";
+            cout << endl << "Pay(-1 to cancel): $";
             cin >> pay_back;
+            if (pay_back == -1) {
+                return 0;
+            }
             while (pay_back > loan_num[i].amount_to_be_paid_back) {
                 cout << endl << "Can not pay amount more than amount to be paid back. Pay: $";
                 cin >> pay_back;
+            }
+            while (pay_back <= 0){
+                cout << endl << "Can not take more loan on same id"; return 0;
             }
             loan_num[i].amount_to_be_paid_back = loan_num[i].amount_to_be_paid_back - pay_back;
             if (loan_num[i].amount_to_be_paid_back == 0){
@@ -256,8 +307,11 @@ int repay_loan(){
 int manager(){
     int initial;
     string manager_password = "Manager@123", input_password;
-    cout << endl << "Enter Password: ";
+    cout << endl << "Enter Password(-1 to cancel): ";
     cin >> input_password;
+    if (input_password == "-1"){
+        return 0;
+    }
     if (manager_password == input_password) {
         while (true) {
             cout << endl << "1. User Database\n2. Loan Database\n3. Exit" <<endl;
