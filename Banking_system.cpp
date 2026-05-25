@@ -111,12 +111,12 @@ int login(){
     if(account_number == -1) {
         return 0;
     }
-    if(user[account_number-1].locked == true){
-        cout << endl << "ACCOUNT LOCKED! CONTACT MANAGER";  return 0;
-    }
     for (int i = 0; i < no_of_users; i++) {
         if (user[i].account_number == account_number) {
             cout << endl << "Account Holder: " << user[i].name;
+            if(user[i].locked == true){
+        cout << endl << "ACCOUNT LOCKED! CONTACT MANAGER";  return 0;
+    }
             for (int j = 3; j > 0; j--){
                 cout << endl << "Enter your password: ";
                 cin >> password;
