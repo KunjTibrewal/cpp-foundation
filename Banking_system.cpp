@@ -111,7 +111,7 @@ int login(){
     if(account_number == -1) {
         return 0;
     }
-    if(user[account_number].locked == true){
+    if(user[account_number-1].locked == true){
         cout << endl << "ACCOUNT LOCKED! CONTACT MANAGER";  return 0;
     }
     for (int i = 0; i < no_of_users; i++) {
@@ -158,9 +158,13 @@ int deposit(int a){
     if (amount == -1) {
         return 0;
     }
-    user[a].balance = user[a].balance + amount;
+    else if (amount <= 0){
+        cout << endl << "Amount can not be 0 or negative"; return 0;
+    }
+    else {user[a].balance = user[a].balance + amount;
     cout << endl << "$" << amount << " deposited to your bank account."; 
     return 0;
+}
 }
 int withdraw(int b){
     int amount;
@@ -171,7 +175,10 @@ int withdraw(int b){
     if (amount == -1){
         return 0;
     }
-    for (int i =3; i >0; i--) {
+    else if (amount <= 0){
+        cout << "Amount can not be 0 or negative"; return 0;
+    }
+    else {for (int i =3; i >0; i--) {
     cout << endl << "Enter Password: ";
     cin >> password;
         if (user[b].password == password) {
@@ -184,6 +191,7 @@ int withdraw(int b){
             } cout << endl << "Too Many Incorrect Attempts, ACCOUNT LOCKED!! Contact Bank Manager";
             user[b].locked = true;  return 0;
         }
+    }
 int transfer(int c){
     int amount, reciever_account_number;
     string password;
@@ -201,6 +209,10 @@ int transfer(int c){
             cout << endl << "Account Holder: " << user[i].name; 
             cout << endl << "Enter amount to be transfered: $";
             cin >> amount;
+            if (amount <= 0){
+                cout << endl << "Amount can not be 0 or negative"; return 0;
+            }
+            else {
             for (int j = 3; j >0; j--){
                 cout << endl << "Enter Password: ";
                 cin >> password;
@@ -214,7 +226,7 @@ int transfer(int c){
                     }}
                 else { cout << "Incorrect Password. "<< j-1 << " chances left. ";
                 }
-                } cout << endl << "Too Many Incorrect Attempts, ACCOUNT LOCKED!! Contact Bank Manager";
+                } cout << endl << "Too Many Incorrect Attempts, ACCOUNT LOCKED!! Contact Bank Manager"; }
             user[c].locked = true;  return 0;
             }}
             cout << endl << "No such account found. "; return 0;
@@ -267,7 +279,10 @@ int take_loan(){
     if (amount == -1){
         return 0;
     }
-    loan_num[no_of_loans].name = name;
+    else if (amount <= 0){
+        cout << endl << "Loan amount can not be 0 or negative!"; return 0;
+    }
+    else {loan_num[no_of_loans].name = name;
     loan_num[no_of_loans].amount = amount;
     loan_num[no_of_loans].id = no_of_loans+1;
     loan_num[no_of_loans].active = true;
@@ -275,6 +290,7 @@ int take_loan(){
     cout << endl << "Loan granted of $" << loan_num[no_of_loans].amount << ". Your loan id is " << loan_num[no_of_loans].id;
     no_of_loans++;
     return 0;
+}
 }
 int repay_loan(){
     int loan_id;
@@ -322,7 +338,7 @@ int manager(){
         while (true) {
             cout << endl << "1. User Database\n2. Loan Database\n3. Lock/Unlock Account\n4. Exit" <<endl;
         cin >> initial;    
-        while (initial < 1 || initial > 3){
+        while (initial < 1 || initial > 4){
             cout << endl << "Invalid Input. Try Again: ";
             cin >> initial;
         }
