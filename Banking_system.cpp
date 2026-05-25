@@ -7,6 +7,7 @@ struct bank{
     string name, password;
     int account_number;
     float balance;
+    bool locked;
 };
 struct loan{
     string name;
@@ -35,7 +36,7 @@ int main(){
     cout << "\nWelcome To The C++ Bank";
     cout << "\n1. Create Account\n2. Login\n3. Loan\n4. Manager Login\n5. Quit\n";
     cin >> initial;
-    while(initial < 1 || initial > 4){
+    while(initial < 1 || initial > 5){
         cout << "\nEnter a valid number assigned to an option: ";
         cin >> initial;
     }
@@ -97,6 +98,7 @@ int create_account(){
     user[no_of_users].password = password;
     user[no_of_users].account_number = no_of_users+1;
     user[no_of_users].balance = 0;
+    user[no_of_users].locked = false;
     no_of_users++;
     cout << "\nAccount created successfully! Your account number is: " << user[no_of_users-1].account_number;
     return 0;
@@ -108,6 +110,9 @@ int login(){
     cin >> account_number;
     if(account_number == -1) {
         return 0;
+    }
+    if(user[account_number].locked == true){
+        cout << endl << "ACCOUNT LOCKED! CONTACT MANAGER";  return 0;
     }
     for (int i = 0; i < no_of_users; i++) {
         if (user[i].account_number == account_number) {
@@ -140,11 +145,10 @@ int login(){
                 }
                 else { cout << endl << "Incorrect password! " << j-1 << " chances left.";
                 }
-            } return 0; 
-        }
-        else {  cout << endl << "Account not found!"; return 0;
-        }
-    }
+            } cout << endl << "Too Many Incorrect Attempts, ACCOUNT LOCKED!! Contact Bank Manager";
+            user[i].locked = true;  return 0; 
+        }}
+         cout << endl << "Account not found!"; return 0;
 }
 int deposit(int a){
     int amount;
@@ -177,7 +181,8 @@ int withdraw(int b){
                 cout << endl << "$" << amount << " Withdrawn Successfully."; return 0;
             }}
         else { cout << endl << "Incorrect Password. " << i-1 << "Chances left! "; }
-            } return 0;
+            } cout << endl << "Too Many Incorrect Attempts, ACCOUNT LOCKED!! Contact Bank Manager";
+            user[b].locked = true;  return 0;
         }
 int transfer(int c){
     int amount, reciever_account_number;
@@ -209,7 +214,8 @@ int transfer(int c){
                     }}
                 else { cout << "Incorrect Password. "<< j-1 << " chances left. ";
                 }
-                } return 0;
+                } cout << endl << "Too Many Incorrect Attempts, ACCOUNT LOCKED!! Contact Bank Manager";
+            user[c].locked = true;  return 0;
             }}
             cout << endl << "No such account found. "; return 0;
     }
@@ -305,7 +311,7 @@ int repay_loan(){
     } cout << endl << "No Loan found"; return 0;
 }
 int manager(){
-    int initial;
+    int initial, account_number, lock_initial;
     string manager_password = "Manager@123", input_password;
     cout << endl << "Enter Password(-1 to cancel): ";
     cin >> input_password;
@@ -314,16 +320,16 @@ int manager(){
     }
     if (manager_password == input_password) {
         while (true) {
-            cout << endl << "1. User Database\n2. Loan Database\n3. Exit" <<endl;
+            cout << endl << "1. User Database\n2. Loan Database\n3. Lock/Unlock Account\n4. Exit" <<endl;
         cin >> initial;    
         while (initial < 1 || initial > 3){
             cout << endl << "Invalid Input. Try Again: ";
             cin >> initial;
         }
         if (initial == 1){
-            cout << endl << setw(20) << "Account Number" << setw(20) << "Account Holder" << setw(20) << "Balance";
+            cout << endl << setw(20) << "Account Number" << setw(20) << "Account Holder" << setw(20) << "Balance" << setw(20) << "Lock Status";
             for (int i = 0; i < no_of_users; i++){
-                cout << endl << setw(20) << user[i].account_number << setw(20) << user[i].name << setw(20) << user[i].balance;
+                cout << endl << setw(20) << user[i].account_number << setw(20) << user[i].name << setw(20) << user[i].balance << setw(20) << user[i].locked;
             }
         }
         else if (initial == 2){
@@ -332,7 +338,42 @@ int manager(){
                 cout << endl << setw(20) << loan_num[j].id << setw(20) << loan_num[j].name <<setw(20) << loan_num[j].amount << setw(20) << loan_num[j].amount_to_be_paid_back << setw(20) << loan_num[j].active;
             }
         }
-        else if (initial == 3){ 
+        else if (initial == 3){
+            cout << endl << "Enter Account Number: ";
+            cin >> account_number;
+            for (int i = 0; i<no_of_users; i++){
+                if (user[i].account_number == account_number){
+                    cout << endl << "Account is " << user[i].locked; 
+                    if (user[i].locked == true){
+                        cout << endl << "1. Unlock Account\n2. Exit" << endl;
+                        cin >> lock_initial;
+                        while(lock_initial > 2 || lock_initial < 1){
+                            cout << endl << "Enter a valid input";
+                            cin >> lock_initial;
+                        }
+                        switch (lock_initial){
+                            case 1: user[i].locked = false; 
+                                 cout << endl << "Account Unlocked"; return 0;
+                            case 2: return 0;
+                        }
+                    }
+                    else {
+                        cout << endl << "1. Lock Account\n2. Exit" <<endl;
+                        cin >> lock_initial;
+                        while(lock_initial > 2 || lock_initial < 1){
+                            cout << endl << "Enter a valid input";
+                            cin >> lock_initial;
+                        }
+                        switch (lock_initial){
+                            case 1: user[i].locked = true; 
+                                 cout << endl << "Account Locked"; return 0;
+                            case 2: return 0;
+                        }
+                    }
+                }
+            }
+        }
+        else if (initial == 4){ 
             return 0;
         }
     }}
