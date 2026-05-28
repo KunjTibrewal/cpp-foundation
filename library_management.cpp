@@ -16,7 +16,7 @@ struct person{
 person member[20];
 int no_of_member = 0, no_of_different_books = 0;
 
-int register_new_member(), member_login(), librarian_login();
+int member_login(), librarian_login();
 
 int main(){
     int initial;
@@ -33,7 +33,8 @@ int main(){
 }
 }
 
-int browse_all_books(int), search_book(int), my_borrowed_books(int), borrow_book(int, int), return_book(int, int), deactivate_membership(int);
+int browse_all_books(int), search_book(int), my_borrowed_books(int), borrow_book(int, int), return_book(int, int),
+deactivate_membership(int), remove_book(int), find_book(int);
 
 int member_login(){
     int id, initial; 
@@ -86,10 +87,23 @@ int member_login(){
 
 int browse_all_books(int user){
     int book_id;
-    cout << endl << setw(4) << "ID" << setw(20) << "Book" << setw(20) << "Author" << setw(20) << "Genre" << setw(20) << "Availability";
+    cout << endl << setw(4) << "ID" << setw(20) << "Book" << setw(20) << "Author" << setw(20) << "Genre" << setw(20) << "Availability" << setw(10) << "Quantity";
     for (int i = 0; i < no_of_different_books; i++){
-        cout << endl << setw(4) << books[i].id << setw(20) << books[i].title << setw(20) << books[i].author << setw(20) << books[i].genre << setw(20) << (books[i].quantity > 0 ? "Available" : "Not Available");
+        cout << endl << setw(4) << books[i].id << setw(20) << books[i].title << setw(20) << books[i].author << setw(20) << books[i].genre << setw(20) << (books[i].quantity > 0 ? "Available" : "Not Available") << setw(10)  << books[i].quantity;
     }
+    if(user == 0){ 
+        cout << endl << "Enter book id you want to remove(-1 to go back): ";
+        cin >> book_id;
+        while (book_id != -1 && (book_id < 1 || book_id > no_of_different_books)){
+        cout << endl << "Enter a valid input: ";
+        cin >> book_id;
+        }
+        switch(book_id){
+            case -1: return 0;
+            default: remove_book(book_id); return 0;
+        }
+    }
+    else{
     cout << endl << "Enter book id to borrow(-1 to go back): ";
     cin >> book_id;
     while (book_id != -1 && (book_id < 1 || book_id > no_of_different_books)){
@@ -99,6 +113,7 @@ int browse_all_books(int user){
     switch(book_id){
         case -1: return 0;
         default: borrow_book(user, book_id); return 0;
+    }
     }
 }
 
@@ -241,13 +256,18 @@ int borrow_book(int user, int book){
             }
         }
     }
-    if(books[book-1].quantity == 0){
+    int books_array = find_book(book);
+    if (books_array == -1){
+        cout << endl << "No book found";
+        return 0;
+    }
+    if(books[books_array].quantity == 0){
         cout << endl << "No copies available"; return 0; 
     }
-    member[user].borrowed_book[member[user].borrowed_quantity] = books[book-1].id;
-    books[book-1].quantity--;
+    member[user].borrowed_book[member[user].borrowed_quantity] = books[books_array].id;
+    books[books_array].quantity--;
     member[user].borrowed_quantity++;
-    cout << endl << books[book-1].title << " issued to you for 14 days";
+    cout << endl << books[books_array].title << " issued to you for 14 days";
     return 0;
 }
 
@@ -273,6 +293,10 @@ int return_book(int user, int book){
     }
     if (found == false){
         cout << endl << "No book found... "; return 0;
+    int books_array = find_book(book);
+    if (books_array == -1){
+        cout << endl << "No book found";
+        return 0;
     }
     cout << endl << "Enter days: ";
     cin >> days;
@@ -290,13 +314,14 @@ int return_book(int user, int book){
     }
     member[user].borrowed_book[j] = 0;
     member[user].borrowed_quantity--;
-    books[book-1].quantity++;
+    books[books_array].quantity++;
     for (j; j<2; j++){
         member[user].borrowed_book[j] = member[user].borrowed_book[j+1];
         member[user].borrowed_book[j+1] = 0;
     }
     cout << endl << "Book returned successfully";
     return 0;
+}
 }
 
 int deactivate_membership(int user){
@@ -314,10 +339,131 @@ int deactivate_membership(int user){
     }
 }
 
+int add_book(), remove_book(int), add_member(), remove_member(int), reactivate_deactivate_member(int), all_members();
+
 int librarian_login(){
-return 0;
+    int initial;
+    string librarian_password = "Librarian@123", password;
+    cout << endl << "Enter Password: ";
+    cin >> password;
+    if (librarian_password != password){
+        cout << endl << "Incorrect Password"; return 0;
+    }
+    while(true){
+    cout << endl << "1. Add Book\n2. Remove Book\n3. Add Member\n4. Remove Member\n5. Reactivate/Deactivate Member\n6. View All Books\n7. View All Members\n8. Exit\n";
+    cin >> initial;
+    while (initial < 1 || initial > 8){
+        cout << "Invalid Input. Try Again: ";
+        cin >> initial;
+    }
+    switch(initial){
+        case 1: add_book(); break;
+        case 2: remove_book(0); break;
+        case 3: add_member(); break;
+        case 4: remove_member(0); break;
+        case 5: reactivate_deactivate_member(0); break;
+        case 6: browse_all_books(0); break;
+        case 7: all_members(); break;
+        case 8: return 0;
+    }
+    }
 }
 
-int register_new_member(){
-return 0;
+int add_book(){
+    string title, author, genre;
+    cout << endl << "Enter book name: ";
+    cin >> title;
+    cout << endl << "Enter author: ";
+    cin >> author;
+    cout << endl << "Enter genre: ";
+    cin >> genre;
+    for (int i = 0; i < no_of_different_books; i++){
+        if (books[i].title == title && books[i].author == author && books[i].genre == genre){
+            books[i].quantity++;
+            cout << endl << "Book added to library"; return 0;
+        }
+    }
+    if(no_of_different_books == 100){
+        cout << endl << "Library capacity reached. Cant add more different books"; return 0;
+    }
+    books[no_of_different_books].title = title;
+    books[no_of_different_books].author = author;
+    books[no_of_different_books].genre = genre;
+    books[no_of_different_books].quantity = 1;
+    books[no_of_different_books].id = no_of_different_books+1;
+    no_of_different_books++;
+    cout << endl << "Book added to library";
+    return 0;
+}
+
+int remove_book(int book){
+    int all_copies;
+    if (book == 0){
+        cout << endl << "Enter book id, you want to remove: ";
+        cin >> book;
+        while (book < 1 || book > no_of_different_books){
+            cout << endl << "Enter a valid book id: ";
+            cin >> book;
+        }
+    }
+    cout << endl << "Do you want to remove all the copies:\n1. Yes\n2. No\n";
+    cin >> all_copies;
+    while(all_copies != 1 && all_copies != 2){
+        cout << endl << "Enter a valid input: ";
+        cin >> all_copies;
+    }
+    for(int i = 0; i < no_of_different_books; i++){
+        if (books[i].id == book){
+            if(books[i].quantity == 0){
+                cout << endl << "Book is currently issued"; return 0;
+            }
+            if (all_copies == 2){
+                books[i].quantity--;
+                if (books[i].quantity != 0){
+                    break;
+                }
+            }
+            else if(all_copies == 1){
+                books[i].quantity = 0;
+            }
+            books[i].title = "0";
+            books[i].author = "0";
+            books[i].genre = "0";
+            for (int j = i; j < no_of_different_books-1; j++){
+                books[j].title = books[j+1].title;
+                books[j].author = books[j+1].author;
+                books[j].genre = books[j+1].genre;
+                books[j].id = books[j+1].id;
+                books[j].quantity = books[j+1].quantity;
+                }
+                no_of_different_books--; break;
+        }
+    }
+    cout << endl << "Book removed";
+    return 0;
+}
+
+int add_member(){
+    return 0;
+}
+
+int remove_member(int user){
+    return 0;
+}
+
+int reactivate_deactivate_member(int user){
+    return 0;
+}
+
+int all_members(){
+    return 0;
+}
+
+int find_book(int id){
+    for (int i = 0; i < no_of_different_books; i++){
+        if (books[i].id == id){
+            return i;
+        }
+    }
+    return -1;
 }
