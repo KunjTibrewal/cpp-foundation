@@ -21,12 +21,13 @@ int main(){
     swapReferenceVar(a, b);
     cout << endl << "Trying to swap by calling reference variable: ";
     cout << endl << "a is " << a << ". b is " << b;       // value swaps again
+    return 0;
     }
 
 void swap(int a, int b){ // expected a and b to swap, but here a and b are not the actual parameters but formal parameters, 
     int temp = a;        // any value change in formal parameters doesnt affect the actual parameters, hence value doesnt swap
     a = b;
-    b = a;
+    b = temp;
 }
 
 void swapPointer(int* a, int* b){   // it took value at the given addresses
