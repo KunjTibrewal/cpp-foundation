@@ -1,7 +1,7 @@
 #include<iostream>
 using namespace std;
 
-double pi = 3.14;
+const double pi = 3.14;
 
 //CYLINDER
 float volume(float r, float h){
@@ -16,7 +16,7 @@ float volume(float a){
     return (a*a*a);
 }
 //THOUGH IT WONT WORK IF ARGUMENT TYPES AND ARGUMENT NUMBERS IS ALSO SAME
-//
+//IF POSSIBLE COMPILER CAN ALSO CONVERT YOUR INT TO FLOAT TO PUT IN FUNCTION OR SOMETHING LIKE THAT
 int main(){
     int radius, height_cylinder, side, length, breadth, height;
     cout << "Enter l, b, h: ";
