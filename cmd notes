@@ -1,0 +1,55 @@
+# Commands Learnt
+
+- sqrt()
+  Header: <cmath>
+  Use: Square root
+  Syntax: sqrt(number)
+  Example: sqrt(25) → 5
+  Important: Returns float/double value
+  Source: HackerRank (Point Distance Problem)
+
+- pow()
+  Header: <cmath>
+  Use: Power of a number
+  Syntax: pow(base, exponent)
+  Example: pow(2,3) → 8
+  Important: Returns float/double value
+  Source: HackerRank (Point Distance Problem)
+
+- fixed
+  Header: <iomanip>
+  Use: Prints numbers in decimal format
+  Example: cout << fixed << 3.14159265359;
+  Output: 3.141593
+  Important:
+    • Default = 6 digits after decimal
+    • Usually used with setprecision()
+  Source: HackerRank (Data Types)
+
+- setprecision()
+  Header: <iomanip>
+  Use: Controls precision of output
+  Syntax: setprecision(n)
+  Example:
+    setprecision(3) → 3 significant digits
+    fixed << setprecision(3) → 3 digits after decimal
+  Important:
+    • Alone → controls significant digits
+    • With fixed → controls digits after decimal
+  Source: HackerRank (Data Types)
+
+- string.length()
+  Header: <string>
+  Use: Find length of string
+  Syntax: string_name.length()
+  Example: "hello".length() → 5
+  Important: Returns number of characters
+  Source: Analyzing Other Programs (Binary Number Program)
+
+- string.at()
+  Header: <string>
+  Use: Access character at a specific index
+  Syntax: string_name.at(index)
+  Example: "hello".at(1) → e
+  Important: Index starts from 0
+  Source: Analyzing Other Programs (Binary Number Program)
